@@ -18,7 +18,7 @@ class BaseOptions():
         self.parser.add_argument('--use_dropout', action='store_true', help='use dropout for the generator')
         self.parser.add_argument('--data_type', default=32, type=int, choices=[8, 16, 32], help="Supported data type i.e. 8, 16, 32 bit")
         self.parser.add_argument('--verbose', action='store_true', default=False, help='toggles verbose')
-        self.parser.add_argument("--local_rank", type=int, default=0)
+        # self.parser.add_argument("--local_rank", type=int, default=0)
         # input/output sizes       
         self.parser.add_argument('--batchSize', type=int, default=32, help='input batch size')
         self.parser.add_argument('--loadSize', type=int, default=512, help='scale images to this size')
