@@ -43,8 +43,8 @@ load_checkpoint_parallel(gen_model, opt.PBAFN_gen_checkpoint)
 
 # gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model).to(device)
 gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model)
-if opt.isTrain and len(opt.gpu_ids):
-    model_gen = torch.nn.parallel.DistributedDataParallel(gen_model, device_ids=[opt.local_rank])
+# if opt.isTrain and len(opt.gpu_ids):
+#     model_gen = torch.nn.parallel.DistributedDataParallel(gen_model, device_ids=[opt.local_rank])
 
 model_gen.eval()
 for data in tqdm(train_loader):
