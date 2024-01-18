@@ -29,7 +29,7 @@ torch.distributed.init_process_group(
     'nccl',
     init_method='env://'
 )
-device = torch.device(f'cuda:{opt.local_rank}')
+# device = torch.device(f'cuda:{opt.local_rank}')
 
 train_data = CreateDataset(opt)
 train_sampler = DistributedSampler(train_data)
@@ -41,7 +41,8 @@ gen_model.train()
 # gen_model.cuda()
 load_checkpoint_parallel(gen_model, opt.PBAFN_gen_checkpoint)
 
-gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model).to(device)
+# gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model).to(device)
+gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model)
 if opt.isTrain and len(opt.gpu_ids):
     model_gen = torch.nn.parallel.DistributedDataParallel(gen_model, device_ids=[opt.local_rank])
 
