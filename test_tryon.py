@@ -70,7 +70,7 @@ for data in tqdm(train_loader):
 
     gen_inputs = torch.cat([preserve_region, warped_cloth, warped_prod_edge, arms_neck_label, arms_color, pose], 1)
 
-    gen_outputs = model_gen(gen_inputs)
+    gen_outputs = gen_model(gen_inputs)
     del gen_inputs
     gc.collect()
     torch.cuda.empty_cache()
