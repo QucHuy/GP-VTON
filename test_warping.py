@@ -51,7 +51,7 @@ if opt.isTrain and len(opt.gpu_ids):
         warp_model, device_ids=[opt.local_rank])
 
 softmax = torch.nn.Softmax(dim=1)
-
+warp_model.eval()
 for ii, data in enumerate(tqdm.tqdm(train_loader)):
     with torch.no_grad():
         pre_clothes_edge = data['edge']
