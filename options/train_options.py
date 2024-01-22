@@ -26,7 +26,7 @@ class TrainOptions(BaseOptions):
                                  help='only do one epoch and displays at each iteration')
 
         # for training
-        self.parser.add_argument("--local-rank", type=int, default=0)
+        # self.parser.add_argument("--local-rank", type=int, default=0)
         self.parser.add_argument('--continue_train', action='store_true',
                                  help='continue training: load the latest model')
         self.parser.add_argument('--load_pretrain', type=str, default='',
