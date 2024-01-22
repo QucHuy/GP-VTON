@@ -29,7 +29,7 @@ torch.distributed.init_process_group(
     'nccl',
     init_method='env://'
 )
-# device = torch.device(f'cuda:{opt.local_rank}')
+device = torch.device(f'cuda:{opt.local_rank}')
 
 train_data = CreateDataset(opt)
 train_sampler = DistributedSampler(train_data)
@@ -38,35 +38,35 @@ train_loader = DataLoader(train_data, batch_size=opt.batchSize, shuffle=False,
 
 gen_model = ResUnetGenerator(36, 4, 5, ngf=64, norm_layer=nn.BatchNorm2d)
 gen_model.train()
-# gen_model.cuda()
+gen_model.cuda()
 load_checkpoint_parallel(gen_model, opt.PBAFN_gen_checkpoint)
 
-# gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model).to(device)
-gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model)
-# if opt.isTrain and len(opt.gpu_ids):
-#     model_gen = torch.nn.parallel.DistributedDataParallel(gen_model, device_ids=[opt.local_rank])
+gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model).to(device)
+# gen_model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(gen_model)
+if opt.isTrain and len(opt.gpu_ids):
+    model_gen = torch.nn.parallel.DistributedDataParallel(gen_model, device_ids=[opt.local_rank])
 
 gen_model.eval()
 for data in tqdm(train_loader):
-    # real_image = data['image'].cuda()
-    # clothes = data['color'].cuda()
-    # preserve_mask = data['preserve_mask3'].cuda()
-    # preserve_region = real_image * preserve_mask
-    # warped_cloth = data['warped_cloth'].cuda()
-    # warped_prod_edge = data['warped_edge'].cuda()
-    # arms_color = data['arms_color'].cuda()
-    # arms_neck_label= data['arms_neck_lable'].cuda()
-    # pose = data['pose'].cuda()
-
-    real_image = data['image']
-    clothes = data['color']
-    preserve_mask = data['preserve_mask3']
+    real_image = data['image'].cuda()
+    clothes = data['color'].cuda()
+    preserve_mask = data['preserve_mask3'].cuda()
     preserve_region = real_image * preserve_mask
-    warped_cloth = data['warped_cloth']
-    warped_prod_edge = data['warped_edge']
-    arms_color = data['arms_color']
-    arms_neck_label= data['arms_neck_lable']
-    pose = data['pose']
+    warped_cloth = data['warped_cloth'].cuda()
+    warped_prod_edge = data['warped_edge'].cuda()
+    arms_color = data['arms_color'].cuda()
+    arms_neck_label= data['arms_neck_lable'].cuda()
+    pose = data['pose'].cuda()
+
+    # real_image = data['image']
+    # clothes = data['color']
+    # preserve_mask = data['preserve_mask3']
+    # preserve_region = real_image * preserve_mask
+    # warped_cloth = data['warped_cloth']
+    # warped_prod_edge = data['warped_edge']
+    # arms_color = data['arms_color']
+    # arms_neck_label= data['arms_neck_lable']
+    # pose = data['pose']
 
     gen_inputs = torch.cat([preserve_region, warped_cloth, warped_prod_edge, arms_neck_label, arms_color, pose], 1)
 
